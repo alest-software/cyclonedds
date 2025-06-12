@@ -1,0 +1,28 @@
+name: Build from source
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    -cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essentials cmake
+
+    - name: Build project
+      run: |
+        mkdir build
+        cd build
+        cmake -DBUILD_EXAMPLES=NO -DBUILD_TESTING=NO ..
+        cmake --build .
+
